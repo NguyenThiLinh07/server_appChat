@@ -22,7 +22,7 @@ export const generateToken = (
   userId: mongoose.Types.ObjectId,
   expires: Moment,
   type: string,
-  secret: string = config.jwt.secret,
+  secret: string = config.jwt.secret
 ): string => {
   const payload = {
     sub: userId,
@@ -47,7 +47,7 @@ export const saveToken = async (
   userId: mongoose.Types.ObjectId,
   expires: Moment,
   type: string,
-  blacklisted: boolean = false,
+  blacklisted: boolean = false
 ): Promise<ITokenDoc> => {
   const tokenDoc = await Token.create({
     token,
@@ -110,11 +110,11 @@ export const generateAuthTokens = async (user: IUserDoc): Promise<AccessAndRefre
 
 /**
  * Generate reset password token
- * @param {string} email
+ * @param {string} username
  * @returns {Promise<string>}
  */
-export const generateResetPasswordToken = async (email: string): Promise<string> => {
-  const user = await userService.getUserByEmail(email);
+export const generateResetPasswordToken = async (username: string): Promise<string> => {
+  const user = await userService.getUserByUsername(username);
   if (!user) {
     throw new ApiError(httpStatus.NO_CONTENT, '');
   }
