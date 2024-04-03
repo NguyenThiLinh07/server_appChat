@@ -11,8 +11,8 @@ import { NewCreatedUser, UpdateUserBody, IUserDoc, NewRegisteredUser } from './u
  * @returns {Promise<IUserDoc>}
  */
 export const createUser = async (userBody: NewCreatedUser): Promise<IUserDoc> => {
-  if (await User.isEmailTaken(userBody.email)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+  if (await User.isUsernameTaken(userBody.username)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Username is already in use');
   }
   return User.create(userBody);
 };
@@ -23,8 +23,8 @@ export const createUser = async (userBody: NewCreatedUser): Promise<IUserDoc> =>
  * @returns {Promise<IUserDoc>}
  */
 export const registerUser = async (userBody: NewRegisteredUser): Promise<IUserDoc> => {
-  if (await User.isEmailTaken(userBody.email)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+  if (await User.isUsernameTaken(userBody.username)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Username is already in use');
   }
   return User.create(userBody);
 };
@@ -48,11 +48,11 @@ export const queryUsers = async (filter: Record<string, any>, options: IOptions)
 export const getUserById = async (id: mongoose.Types.ObjectId): Promise<IUserDoc | null> => User.findById(id);
 
 /**
- * Get user by email
- * @param {string} email
+ * Get user by username
+ * @param {string} username
  * @returns {Promise<IUserDoc | null>}
  */
-export const getUserByEmail = async (email: string): Promise<IUserDoc | null> => User.findOne({ email });
+export const getUserByUsername = async (username: string): Promise<IUserDoc | null> => User.findOne({ username });
 
 /**
  * Update user by id
@@ -68,8 +68,8 @@ export const updateUserById = async (
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+  if (updateBody.username && (await User.isUsernameTaken(updateBody.username, userId))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Username is already in use');
   }
   Object.assign(user, updateBody);
   await user.save();

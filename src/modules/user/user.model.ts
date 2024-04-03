@@ -8,15 +8,16 @@ import { IUserDoc, IUserModel } from './user.interfaces';
 
 const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
   {
-    name: {
+    username: {
       type: String,
       required: true,
       trim: true,
+      unique: true,
+      minlength: 8,
     },
     email: {
       type: String,
       required: true,
-      unique: true,
       trim: true,
       lowercase: true,
       validate(value: string) {
@@ -64,6 +65,17 @@ userSchema.plugin(paginate);
  */
 userSchema.static('isEmailTaken', async function (email: string, excludeUserId: mongoose.ObjectId): Promise<boolean> {
   const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
+  return !!user;
+});
+
+/**
+ * Check if username is taken
+ * @param {string} username - The user's username
+ * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
+ * @returns {Promise<boolean>}
+ */
+userSchema.static('isUsernameTaken', async function (username: string, excludeUserId: mongoose.ObjectId): Promise<boolean> {
+  const user = await this.findOne({ username, _id: { $ne: excludeUserId } });
   return !!user;
 });
 

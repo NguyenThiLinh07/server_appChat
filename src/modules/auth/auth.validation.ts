@@ -3,9 +3,8 @@ import { password } from '../validate/custom.validation';
 import { NewRegisteredUser } from '../user/user.interfaces';
 
 const registerBody: Record<keyof NewRegisteredUser, any> = {
-  email: Joi.string().required().email(),
+  username: Joi.string().required(),
   password: Joi.string().required().custom(password),
-  name: Joi.string().required(),
 };
 
 export const register = {
@@ -14,7 +13,7 @@ export const register = {
 
 export const login = {
   body: Joi.object().keys({
-    email: Joi.string().required(),
+    username: Joi.string().required(),
     password: Joi.string().required(),
   }),
 };
@@ -33,7 +32,7 @@ export const refreshTokens = {
 
 export const forgotPassword = {
   body: Joi.object().keys({
-    email: Joi.string().email().required(),
+    username: Joi.string().required(),
   }),
 };
 
@@ -49,5 +48,11 @@ export const resetPassword = {
 export const verifyEmail = {
   query: Joi.object().keys({
     token: Joi.string().required(),
+  }),
+};
+
+export const loginGoogle = {
+  query: Joi.object().keys({
+    tokenId: Joi.string().required(),
   }),
 };

@@ -7,19 +7,22 @@ import * as authService from './auth.service';
 import { emailService } from '../email';
 
 export const register = catchAsync(async (req: Request, res: Response) => {
-  console.log('req', req.body);
   const user = await userService.registerUser(req.body);
-  console.log('user', user);
   const tokens = await tokenService.generateAuthTokens(user);
-  console.log('token', tokens);
   res.status(httpStatus.CREATED).send({ user, tokens });
 });
 
 export const login = catchAsync(async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  const user = await authService.loginUserWithEmailAndPassword(email, password);
+  const { username, password } = req.body;
+  const user = await authService.loginUserWithUsernameAndPassword(username, password);
   const tokens = await tokenService.generateAuthTokens(user);
   res.send({ user, tokens });
+});
+
+export const loginWithGoogle = catchAsync(async (req: Request, res: Response) => {
+  const { tokenId } = req.query;
+  const user = await authService.loginUserWithGoogle(String(tokenId));
+  res.send({ user });
 });
 
 export const logout = catchAsync(async (req: Request, res: Response) => {
@@ -33,7 +36,7 @@ export const refreshTokens = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const forgotPassword = catchAsync(async (req: Request, res: Response) => {
-  const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
+  const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.username);
   await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
   res.status(httpStatus.NO_CONTENT).send();
 });
@@ -45,7 +48,7 @@ export const resetPassword = catchAsync(async (req: Request, res: Response) => {
 
 export const sendVerificationEmail = catchAsync(async (req: Request, res: Response) => {
   const verifyEmailToken = await tokenService.generateVerifyEmailToken(req.user);
-  await emailService.sendVerificationEmail(req.user.email, verifyEmailToken, req.user.name);
+  await emailService.sendVerificationEmail(req.user.email, verifyEmailToken, req.user.username);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
