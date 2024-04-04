@@ -13,11 +13,11 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
       required: true,
       trim: true,
       unique: true,
+      sparse: true,
       minlength: 8,
     },
     email: {
       type: String,
-      required: true,
       trim: true,
       lowercase: true,
       validate(value: string) {
@@ -28,11 +28,10 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
     },
     password: {
       type: String,
-      required: true,
       trim: true,
       minlength: 8,
       validate(value: string) {
-        if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
+        if (!value.match(/^(?=.*[a-zA-Z])(?=.*(\d)).{8,}$/)) {
           throw new Error('Password must contain at least one letter and one number');
         }
       },
@@ -46,6 +45,22 @@ const userSchema = new mongoose.Schema<IUserDoc, IUserModel>(
     isEmailVerified: {
       type: Boolean,
       default: false,
+    },
+    address: {
+      type: String,
+      trim: true,
+    },
+    birthday: {
+      type: String,
+    },
+    phoneNumber: {
+      type: String,
+      trim: true,
+      validate(value: string) {
+        if (!value.match(/^(\d){10}/)) {
+          throw new Error('Invalid phone number');
+        }
+      },
     },
   },
   {

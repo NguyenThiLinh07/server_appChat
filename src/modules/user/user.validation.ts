@@ -1,11 +1,14 @@
 import Joi from 'joi';
-import { password, objectId } from '../validate/custom.validation';
+import { password, objectId, phoneNumber } from '../validate/custom.validation';
 import { NewCreatedUser } from './user.interfaces';
 
 const createUserBody: Record<keyof NewCreatedUser, any> = {
   password: Joi.string().required().custom(password),
   username: Joi.string().required(),
   role: Joi.string().required().valid('user', 'admin'),
+  address: Joi.string(),
+  birthday: Joi.string(),
+  phoneNumber: Joi.string().custom(phoneNumber),
 };
 
 export const createUser = {
@@ -37,6 +40,9 @@ export const updateUser = {
     .keys({
       password: Joi.string().custom(password),
       username: Joi.string(),
+      address: Joi.string(),
+      birthday: Joi.string(),
+      phoneNumber: Joi.string().custom(phoneNumber),
     })
     .min(1),
 };

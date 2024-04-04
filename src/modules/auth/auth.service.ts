@@ -8,6 +8,7 @@ import tokenTypes from '../token/token.types';
 import { getUserById, getUserByUsername, updateUserById } from '../user/user.service';
 import { IUserDoc, IUserWithTokens } from '../user/user.interfaces';
 import { generateAuthTokens, verifyToken } from '../token/token.service';
+import User from '../user/user.model';
 
 /**
  * Login with username and password
@@ -51,8 +52,13 @@ firebaseAdmin.initializeApp({
 
 export const loginUserWithGoogle = async (tokenId: string): Promise<any> => {
   const decodedToken = await firebaseAdmin.auth().verifyIdToken(tokenId);
-  const { uid, email, name, picture: avatar, email_verified: isEmailVerified } = decodedToken;
-  return { uid, email, name, avatar, isEmailVerified };
+  const { uid, email, name: username, picture: avatar, email_verified: isEmailVerified } = decodedToken;
+  const user = { uid, email, username, avatar, isEmailVerified };
+  if (await User.isEmailTaken(String(email))) {
+    return user;
+  }
+  await User.create(user);
+  return user;
 };
 
 /**

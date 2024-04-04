@@ -16,3 +16,13 @@ export const password = (value: string, helpers: CustomHelpers) => {
   }
   return value;
 };
+
+export const phoneNumber = (value: string, helpers: CustomHelpers) => {
+  if (value.length !== 10) {
+    return helpers.message({ custom: 'phone number must be 10 characters' });
+  }
+  if (!value.match(/\d/)) {
+    return helpers.message({ custom: 'Phone numbers are just numbers' });
+  }
+  return value;
+};

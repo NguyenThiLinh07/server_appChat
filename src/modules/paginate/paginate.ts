@@ -58,8 +58,6 @@ const paginate = <T extends Document, U extends Model<U>>(schema: Schema<T>): vo
         projectionCriteria.push((include === 'hide' ? '-' : '') + key);
       });
       project = projectionCriteria.join(' ');
-    } else {
-      project = '-createdAt -updatedAt';
     }
 
     const limit = options.limit && parseInt(options.limit.toString(), 10) > 0 ? parseInt(options.limit.toString(), 10) : 10;
