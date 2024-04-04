@@ -6,6 +6,9 @@ export interface IUser {
   username: string;
   password: string;
   email: string;
+  birthday: string;
+  address: string;
+  phoneNumber: string;
   role: string;
   isEmailVerified: boolean;
 }
