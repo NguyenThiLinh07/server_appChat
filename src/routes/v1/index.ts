@@ -20,6 +20,10 @@ const defaultIRoute: IRoute[] = [
     path: '/users',
     route: userRoute,
   },
+  // {
+  //   path: '/upload',
+  //   route: router.post('/', upload.array('images'), userController.uploadAvatar),
+  // },
 ];
 
 const devIRoute: IRoute[] = [

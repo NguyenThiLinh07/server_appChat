@@ -4,7 +4,6 @@ import { auth } from '../../modules/auth';
 import { userController, userValidation } from '../../modules/user';
 
 const router: Router = express.Router();
-
 router
   .route('/')
   .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
