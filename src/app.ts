@@ -24,7 +24,12 @@ if (config.env !== 'test') {
 app.use(helmet());
 
 // enable cors
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: `http://localhost:3000`,
+  })
+);
 app.options('*', cors());
 
 // parse json request body

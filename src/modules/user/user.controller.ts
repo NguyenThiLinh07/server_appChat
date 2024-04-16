@@ -42,3 +42,17 @@ export const deleteUser = catchAsync(async (req: Request, res: Response) => {
     res.status(httpStatus.NO_CONTENT).send();
   }
 });
+
+// export const uploadAvatar = catchAsync(async (req: Request, res: Response) => {
+//   console.log('req', req);
+//   const user = await userService.getUserById(new mongoose.Types.ObjectId(req.params['userId']));
+//   if (!user) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+//   }
+//   const files = req.files as Express.Multer.File[];
+//   const avatar = await uploadFiles(files);
+//   console.log('avatar', avatar);
+//   // user.avatar = avatar[0];
+//   await user.save();
+//   res.send(user);
+// });
